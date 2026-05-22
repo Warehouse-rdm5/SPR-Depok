@@ -311,7 +311,7 @@
                  <label class="custom-radio-label label-empty" for="e_${idx}">📭 Kosong</label>
                </div>
                
-               <input type="number" id="qty_${idx}" class="form-control form-control-sm mt-3" placeholder="📦 Qty Fisik (Opsional)" style="border: 2px solid #cbd5e1; border-radius: 10px; font-weight: 700;">
+               <input type="number" pattern="[0-9]*" inputmode="numeric" id="qty_${idx}" class="form-control form-control-lg mt-3" placeholder="📦 Isi Qty (Opsional)" style="border: 2px solid #cbd5e1; border-radius: 10px; font-weight: 700; color: #1e3a8a;">
                
                <input type="text" id="remark_${idx}" class="form-control form-control-lg mt-2" value="${remarkValue}" placeholder="✍️ Ketik keterangan wajib..." style="display:${remarkDisplay}; border: 2px solid #ef4444; border-radius: 10px; font-weight: 700; background-color: #fef2f2;">
                
@@ -328,7 +328,6 @@
         if (['01', '02'].includes(suffix) && products.length < 2) {
            htmlContent += `<button type="button" class="btn btn-outline-primary w-100 mt-2 mb-3 fw-bold" style="border-width: 2px; border-style: dashed; padding: 12px; border-radius: 12px;" onclick="Swal.close(); showAddManualPopup('${bin}');">➕ Tambah Product Fisik ke-2 (Baris Baru)</button>`;
         }
-        
         htmlContent += '</div>';
 
         Swal.fire({
@@ -338,13 +337,12 @@
             let auditData = [];
             for(let i=0; i<products.length; i++) {
               let statusVal = document.getElementById('m_'+i).checked ? 'match' : (document.getElementById('nm_'+i).checked ? 'notmatch' : 'empty');
-              let qtyVal = document.getElementById('qty_'+i) ? document.getElementById('qty_'+i).value.trim() : '';
-
+              let qtyVal = document.getElementById('qty_'+i) ? document.getElementById('qty_'+i).value.trim() : ''; // AMBIL QTY
+              
               if (['03','04','05'].includes(suffix)) {
                   let isVerified = document.getElementById('verified_'+i).value === 'true', remarkVal = document.getElementById('remark_'+i) ? document.getElementById('remark_'+i).value : '';
                   if (statusVal === 'notmatch' && !isVerified) { Swal.showValidationMessage('Pastikan status "Not Match" sudah dicek ke Stok!'); return false; }
-                  
-                  // MENGIRIM PRODUCT, MID DAN QTY KE LOGS
+                  // PUSH PRODUCT & QTY
                   auditData.push({ row: products[i].row, product: products[i].product, mid: products[i].mid, status: statusVal, remark: remarkVal, qty: qtyVal });
               } else {
                   let remark = document.getElementById('remark_'+i) ? document.getElementById('remark_'+i).value.trim() : '';
