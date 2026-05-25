@@ -392,11 +392,13 @@
 
       function toggleRemark(idx, status, suffix) {
         const input12 = document.getElementById('remark_'+idx), checkArea345 = document.getElementById('check_area_'+idx);
+        const isReverseBin = ['03','04','05','06','07','08','09'].includes(suffix); // LOGIKA BARU
+
         if(status === 'notmatch') {
-            if (['03','04','05'].includes(suffix)) { checkArea345.style.display = 'block'; document.getElementById('verified_'+idx).value = 'false'; } 
+            if (isReverseBin) { checkArea345.style.display = 'block'; document.getElementById('verified_'+idx).value = 'false'; } 
             else { input12.style.display = 'block'; input12.focus(); }
         } else {
-            if (['03','04','05'].includes(suffix)) { checkArea345.style.display = 'none'; document.getElementById('verified_'+idx).value = 'true'; document.getElementById('stock_status_'+idx).innerHTML = ''; } 
+            if (isReverseBin) { checkArea345.style.display = 'none'; document.getElementById('verified_'+idx).value = 'true'; document.getElementById('stock_status_'+idx).innerHTML = ''; } 
             else { input12.style.display = 'none'; input12.value = ''; }
         }
       }
@@ -476,16 +478,19 @@
             let auditData = [];
             for(let i=0; i<products.length; i++) {
               let statusVal = document.getElementById('m_'+i).checked ? 'match' : (document.getElementById('nm_'+i).checked ? 'notmatch' : 'empty');
-              let qtyVal = document.getElementById('qty_'+i) ? document.getElementById('qty_'+i).value.trim() : ''; // AMBIL NILAI QTY
+              let qtyVal = document.getElementById('qty_'+i) ? document.getElementById('qty_'+i).value.trim() : ''; 
 
-              if (['03','04','05'].includes(suffix)) {
+              if (['03','04','05','06','07','08','09'].includes(suffix)) {
                   let isVerified = document.getElementById('verified_'+i).value === 'true', remarkVal = document.getElementById('remark_'+i) ? document.getElementById('remark_'+i).value : '';
                   if (statusVal === 'notmatch' && !isVerified) { Swal.showValidationMessage('Pastikan status "Not Match" sudah dicek ke Stok!'); return false; }
-                  auditData.push({ row: products[i].row, status: statusVal, remark: remarkVal, qty: qtyVal });
+                  
+                  auditData.push({ row: products[i].row, status: statusVal, remark: remarkVal, qty: qtyVal, product: products[i].product, mid: products[i].mid });
               } else {
                   let remark = document.getElementById('remark_'+i) ? document.getElementById('remark_'+i).value.trim() : '';
                   if(statusVal === 'notmatch' && remark === '') { Swal.showValidationMessage('Keterangan WAJIB diisi untuk produk Not Match!'); return false; }
-                  auditData.push({ row: products[i].row, status: statusVal, remark: remark, qty: qtyVal });
+                  
+                  // Perbaikan: Tambahkan product dan mid
+                  auditData.push({ row: products[i].row, status: statusVal, remark: remark, qty: qtyVal, product: products[i].product, mid: products[i].mid });
               }
             } return auditData;
           }
