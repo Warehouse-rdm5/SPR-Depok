@@ -317,7 +317,7 @@
                if (result.isConfirmed) { setTimeout(() => { showInputMidPopup(response.bin, response.products); }, 350); } else { document.getElementById('binCode').value = ''; }
              });
           } 
-          else if (response.status === 'bin_not_found_030405') { showInputMidPopup(response.bin, null); }
+          else if (response.status === 'bin_not_found_stock') { showInputMidPopup(response.bin, null); }
           else if (response.type === 'POPUP_LIST') { showAuditListPopup(binVal, response.products, response.suffix); } 
           else { Swal.fire('Error!', response.message, 'error'); }
         } catch (error) { Swal.fire('Error', 'Gagal terhubung ke Database.', 'error'); } 
@@ -327,9 +327,9 @@
       function toggleRemark(idx, status, suffix) {
         const input12 = document.getElementById('remark_'+idx), checkArea345 = document.getElementById('check_area_'+idx);
         if(status === 'notmatch') {
-            if (['03','04','05'].includes(suffix)) { checkArea345.style.display = 'block'; document.getElementById('verified_'+idx).value = 'false'; } else { input12.style.display = 'block'; input12.focus(); }
+            if (['03','04','05','06','07','08','09'].includes(suffix)) { checkArea345.style.display = 'block'; document.getElementById('verified_'+idx).value = 'false'; } else { input12.style.display = 'block'; input12.focus(); }
         } else {
-            if (['03','04','05'].includes(suffix)) { checkArea345.style.display = 'none'; document.getElementById('verified_'+idx).value = 'true'; document.getElementById('stock_status_'+idx).innerHTML = ''; } else { input12.style.display = 'none'; input12.value = ''; }
+            if (['03','04','05','06','07','08','09'].includes(suffix)) { checkArea345.style.display = 'none'; document.getElementById('verified_'+idx).value = 'true'; document.getElementById('stock_status_'+idx).innerHTML = ''; } else { input12.style.display = 'none'; input12.value = ''; }
         }
       }
 
@@ -390,7 +390,7 @@
             for(let i=0; i<products.length; i++) {
               let statusVal = document.getElementById('m_'+i).checked ? 'match' : (document.getElementById('nm_'+i).checked ? 'notmatch' : 'empty');
               let qtyVal = document.getElementById('qty_'+i) ? document.getElementById('qty_'+i).value.trim() : '';
-              if (['03','04','05'].includes(suffix)) {
+              if (['03','04','05','06','07','08','09'].includes(suffix)) {
                   let isVerified = document.getElementById('verified_'+i).value === 'true', remarkVal = document.getElementById('remark_'+i) ? document.getElementById('remark_'+i).value : '';
                   if (statusVal === 'notmatch' && !isVerified) { Swal.showValidationMessage('Pastikan status "Not Match" sudah dicek ke Stok!'); return false; }
                   auditData.push({ row: products[i].row, product: products[i].product, mid: products[i].mid, status: statusVal, remark: remarkVal, qty: qtyVal });
