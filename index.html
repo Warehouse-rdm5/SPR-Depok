@@ -12,7 +12,6 @@
       html, body { max-width: 100vw; overflow-x: hidden; }
       body { background-color: #f0f2f5; font-family: 'Plus Jakarta Sans', sans-serif; color: #333; padding-bottom: 30px; touch-action: manipulation; }
       
-      /* STYLING MODE SELECTION */
       #modeSelectionScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #e2e8f0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
       .mode-card { background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 8px solid #d32f2f; }
       .btn-mode { padding: 18px; font-size: 1.15rem; font-weight: 800; border-radius: 14px; width: 100%; border: none; transition: transform 0.2s; }
@@ -38,7 +37,6 @@
       .custom-radio-btn:checked + .label-notmatch { background-color: #ef4444; border-color: #ef4444; color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
       .custom-radio-btn:checked + .label-empty { background-color: #f59e0b; border-color: #f59e0b; color: white; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
 
-      /* Styling khusus untuk tombol alternatif jepret foto */
       #reader button { padding: 10px 20px; background-color: #d32f2f; color: white; border: none; border-radius: 8px; font-weight: bold; margin: 10px 5px; cursor: pointer; }
       #reader a { color: #d32f2f; font-weight: bold; text-decoration: none; margin-top: 10px; display: inline-block; }
     </style>
@@ -63,7 +61,8 @@
           </div>
           <div>
             <button type="button" class="btn btn-sm btn-warning fw-bold text-dark me-1" onclick="backToMenu()" style="border-radius: 20px; padding: 5px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠 Menu</button>
-            <button type="button" class="btn btn-sm btn-light fw-bold text-dark" onclick="fetchInitialData()" style="border-radius: 20px; padding: 5px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🔄 Refresh</button>
+            <!-- UPDATE: Tombol Refresh kini mengirim parameter true untuk mendobrak Cache -->
+            <button type="button" class="btn btn-sm btn-light fw-bold text-dark" onclick="fetchInitialData(true)" style="border-radius: 20px; padding: 5px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🔄 Refresh</button>
           </div>
         </div>
       </div>
@@ -89,8 +88,10 @@
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Target</small><div class="task-num text-primary" style="font-size:1.05rem;" id="psTotal">-</div></div>
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Selesai</small><div class="task-num text-success" style="font-size:1.05rem;" id="psDone">-</div></div>
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Sesuai%</small><div class="task-num text-danger" style="font-size:1.05rem;" id="psPctMatch">-%</div></div>
-            <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Kosong</small><div class="task-num text-warning text-dark" style="font-size:1.05rem;" id="psKosong">-</div></div>
-            <div class="col px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Belum Val</small><div class="task-num text-secondary" style="font-size:1.05rem;" id="psPctBelum">-%</div></div>
+            <!-- UPDATE: Penambahan % Kosong -->
+            <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Kosong</small><div class="task-num text-warning text-dark" style="font-size:1.05rem;" id="psKosong">-</div><div style="font-size:0.65rem; font-weight:700; color:#d97706;" id="psPctKosong">-%</div></div>
+            <!-- UPDATE: Perbaikan kata Belum Validasi -->
+            <div class="col px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Belum Validasi</small><div class="task-num text-secondary" style="font-size:1.05rem;" id="psPctBelum">-%</div></div>
           </div>
 
           <div class="mt-2 text-start">
@@ -119,8 +120,10 @@
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Target</small><div class="task-num text-primary" style="font-size:1.05rem;" id="rbTotal">-</div></div>
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Selesai</small><div class="task-num text-success" style="font-size:1.05rem;" id="rbDone">-</div></div>
             <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Sesuai%</small><div class="task-num text-danger" style="font-size:1.05rem;" id="rbPctMatch">-%</div></div>
-            <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Kosong</small><div class="task-num text-warning text-dark" style="font-size:1.05rem;" id="rbKosong">-</div></div>
-            <div class="col px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Belum Val</small><div class="task-num text-secondary" style="font-size:1.05rem;" id="rbPctBelum">-%</div></div>
+            <!-- UPDATE: Penambahan % Kosong -->
+            <div class="col border-end px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Kosong</small><div class="task-num text-warning text-dark" style="font-size:1.05rem;" id="rbKosong">-</div><div style="font-size:0.65rem; font-weight:700; color:#d97706;" id="rbPctKosong">-%</div></div>
+            <!-- UPDATE: Perbaikan kata Belum Validasi -->
+            <div class="col px-1"><small class="text-secondary fw-bold" style="font-size:0.6rem;">Belum Validasi</small><div class="task-num text-secondary" style="font-size:1.05rem;" id="rbPctBelum">-%</div></div>
           </div>
 
           <div class="mt-2 text-start">
@@ -169,28 +172,18 @@
         const headerTitle = document.getElementById('headerTitle');
         const headerBg = document.getElementById('dynamicHeader');
         
-        // Elemen yang akan kita manipulasi
         const binInput = document.getElementById('binCode');
         const reversePanel = document.getElementById('reverseBinPanel');
         
         if (mode === 'ECERAN') {
            headerTitle.innerText = '🛒 WMS Bin Eceran';
            headerBg.style.background = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
-           
-           // 1. Ubah contoh teks pencarian untuk Eceran
            binInput.placeholder = 'Contoh: RA-01-01-01';
-           
-           // 2. Sembunyikan panel Reverse Bin untuk Eceran
            if(reversePanel) reversePanel.style.display = 'none'; 
-           
         } else {
            headerTitle.innerText = '📦 WMS Bin SPR';
            headerBg.style.background = 'linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%)';
-           
-           // 1. Ubah contoh teks pencarian untuk SPR
            binInput.placeholder = 'Contoh: AB-02-04';
-           
-           // 2. Tampilkan kembali panel Reverse Bin untuk SPR
            if(reversePanel) reversePanel.style.display = 'block'; 
         }
         
@@ -203,11 +196,12 @@
         return await res.json();
       }
 
-      async function fetchInitialData() {
+      // UPDATE: Tambahan parameter isForce untuk mem-bypass Cache 10 Menit saat tombol Refresh ditekan
+      async function fetchInitialData(isForce = false) {
         const btn = document.getElementById('btnSubmit');
         btn.disabled = true; btn.innerHTML = '⏳ Menarik Data ' + appMode + '...';
         try {
-          const data = await sendRequest({ action: 'init' });
+          const data = await sendRequest({ action: 'init', forceRefresh: isForce });
           if(data.status === 'success') {
             const binList = document.getElementById('binList'); binList.innerHTML = '';
             data.bins.forEach(b => { let opt = document.createElement('option'); opt.value = b; binList.appendChild(opt); });
@@ -227,9 +221,13 @@
       function updateTaskBoard(data) {
         if (!data.pickSlot) return; 
 
-        document.getElementById('psTotal').innerText = data.pickSlot.target; document.getElementById('psDone').innerText = data.pickSlot.match;
-        document.getElementById('psPctMatch').innerText = data.pickSlot.pctMatch + '%'; document.getElementById('psPctBelum').innerText = data.pickSlot.pctBelum + '%';
+        document.getElementById('psTotal').innerText = data.pickSlot.target; 
+        document.getElementById('psDone').innerText = data.pickSlot.match;
+        document.getElementById('psPctMatch').innerText = data.pickSlot.pctMatch + '%'; 
+        document.getElementById('psPctBelum').innerText = data.pickSlot.pctBelum + '%';
         document.getElementById('psKosong').innerText = data.pickSlot.kosong; 
+        // UPDATE: Render % Kosong ke UI
+        if(document.getElementById('psPctKosong')) document.getElementById('psPctKosong').innerText = data.pickSlot.pctKosong + '%';
 
         let psBelumHTML = ''; data.pickSlot.listBelum.forEach(x => { psBelumHTML += `<tr><td style="white-space: nowrap; padding-left: 12px;"><b style="color: #334155;">${x.bin}</b></td><td>${x.product}</td><td class="text-muted">${x.mid}</td></tr>`; });
         document.getElementById('psTableBelum').innerHTML = psBelumHTML || '<tr><td colspan="3" class="text-center text-success fw-bold py-3">🎉 Semua sudah divalidasi</td></tr>';
@@ -240,9 +238,13 @@
         let psKosongHTML = ''; data.pickSlot.listEmpty.forEach(x => { psKosongHTML += `<tr><td style="white-space: nowrap; padding-left: 12px;"><b style="color: #334155;">${x.bin}</b></td><td>${x.product}</td><td class="text-warning text-dark fw-bold">${x.mid}</td></tr>`; });
         document.getElementById('psTableKosong').innerHTML = psKosongHTML || '<tr><td colspan="3" class="text-center text-muted fw-bold py-3">🎉 Tidak ada Item Kosong</td></tr>';
 
-        document.getElementById('rbTotal').innerText = data.reverseBin.target; document.getElementById('rbDone').innerText = data.reverseBin.match;
-        document.getElementById('rbPctMatch').innerText = data.reverseBin.pctMatch + '%'; document.getElementById('rbPctBelum').innerText = data.reverseBin.pctBelum + '%';
+        document.getElementById('rbTotal').innerText = data.reverseBin.target; 
+        document.getElementById('rbDone').innerText = data.reverseBin.match;
+        document.getElementById('rbPctMatch').innerText = data.reverseBin.pctMatch + '%'; 
+        document.getElementById('rbPctBelum').innerText = data.reverseBin.pctBelum + '%';
         document.getElementById('rbKosong').innerText = data.reverseBin.kosong; 
+        // UPDATE: Render % Kosong ke UI
+        if(document.getElementById('rbPctKosong')) document.getElementById('rbPctKosong').innerText = data.reverseBin.pctKosong + '%';
 
         let rbBelumHTML = ''; data.reverseBin.listBelum.forEach(x => { rbBelumHTML += `<tr><td style="white-space: nowrap; padding-left: 12px;"><b style="color: #334155;">${x.bin}</b></td><td>${x.product}</td><td class="text-muted">${x.mid}</td></tr>`; });
         document.getElementById('rbTableBelum').innerHTML = rbBelumHTML || '<tr><td colspan="3" class="text-center text-success fw-bold py-3">🎉 Semua sudah divalidasi</td></tr>';
@@ -259,25 +261,14 @@
         }
       }
 
-      // ==========================================================
-      // FITUR SCANNER FINAL (DILENGKAPI TOMBOL JEPRET FOTO ALTERNATIF)
-      // ==========================================================
-      let html5QrcodeScanner; // Gunakan variabel versi Scanner UI
-
       function openScanner() {
-        // 1. Tampilkan layar hitam overlay
         document.getElementById('scannerOverlay').style.display = 'flex';
-
-        // 2. Gunakan Html5QrcodeScanner (Versi UI Lengkap)
         html5QrcodeScanner = new Html5QrcodeScanner(
           "reader",
           { fps: 10, qrbox: { width: 250, height: 250 }, rememberLastUsedCamera: true },
-          false // verbose = false
+          false 
         );
-
-        // 3. Render scanner ke layar
         html5QrcodeScanner.render(onScanSuccess, function(errorMessage) {
-            // Biarkan kosong agar console tidak dipenuhi error pencarian frame
         });
       }
 
@@ -558,7 +549,6 @@
         }
       }
 
-      // FUNGSI UNTUK KEMBALI KE MENU UTAMA
       function backToMenu() {
         document.getElementById('mainAppContent').style.display = 'none';
         document.getElementById('modeSelectionScreen').style.display = 'flex';
